@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>P of LOU</title>
 
-    <!-- 🖼️ 홈 화면 및 브라우저 바로가기 아이콘 (캐시 강제 우회 적용) -->
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png?v=2">
-    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png?v=2">
-    <link rel="shortcut icon" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png?v=2">
+    <!-- 🖼️ 홈 화면 및 브라우저 바로가기 아이콘 -->
+    <link rel="icon" type="image/png" sizes="192x192" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png?v=3">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png?v=3">
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png?v=3">
 
     <!-- 프리텐다드 웹 폰트 CDN -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
@@ -134,7 +134,7 @@
     <!-- 🔒 비밀번호 잠금 자바스크립트 -->
     <script>
         (function() {
-            const MY_PASSWORD = "1234"; // 원하시는 비밀번호로 지정하세요
+            const MY_PASSWORD = "1234";
 
             if (sessionStorage.getItem("authenticated") !== "true") {
                 const userInput = prompt("🔒 비밀번호를 입력하세요:");
@@ -203,34 +203,34 @@
                 <input type="date" id="date" required>
             </div>
 
-            <!-- B~G열 : type="text" 및 inputmode="text"로 변경하여 - 키와 특수문자 입력 허용 -->
+            <!-- B~G열 : 숫자 키패드 지원 및 마이너스 입력 모드 -->
             <div class="section-title">매수 내역 (B~G열)</div>
             <div class="row">
-                <div class="col"><input type="text" inputmode="text" id="buyPrice1" placeholder="1차 매수가 (B)"></div>
-                <div class="col"><input type="text" inputmode="text" id="buyQty1" placeholder="1차 수량 (C)"></div>
+                <div class="col"><input type="text" inputmode="decimal" id="buyPrice1" placeholder="1차 매수가 (B)"></div>
+                <div class="col"><input type="text" inputmode="decimal" id="buyQty1" placeholder="1차 수량 (C)"></div>
             </div>
             <div class="row">
-                <div class="col"><input type="text" inputmode="text" id="buyPrice2" placeholder="2차 매수가 (D)"></div>
-                <div class="col"><input type="text" inputmode="text" id="buyQty2" placeholder="2차 수량 (E)"></div>
+                <div class="col"><input type="text" inputmode="decimal" id="buyPrice2" placeholder="2차 매수가 (D)"></div>
+                <div class="col"><input type="text" inputmode="decimal" id="buyQty2" placeholder="2차 수량 (E)"></div>
             </div>
             <div class="row">
-                <div class="col"><input type="text" inputmode="text" id="buyPrice3" placeholder="3차 매수가 (F)"></div>
-                <div class="col"><input type="text" inputmode="text" id="buyQty3" placeholder="3차 수량 (G)"></div>
+                <div class="col"><input type="text" inputmode="decimal" id="buyPrice3" placeholder="3차 매수가 (F)"></div>
+                <div class="col"><input type="text" inputmode="decimal" id="buyQty3" placeholder="3차 수량 (G)"></div>
             </div>
 
             <!-- H~M열 -->
             <div class="section-title">매도 내역 (H~M열)</div>
             <div class="row">
-                <div class="col"><input type="text" inputmode="text" id="sellPrice1" placeholder="1차 매도가 (H)"></div>
-                <div class="col"><input type="text" inputmode="text" id="sellQty1" placeholder="1차 수량 (I)"></div>
+                <div class="col"><input type="text" inputmode="decimal" id="sellPrice1" placeholder="1차 매도가 (H)"></div>
+                <div class="col"><input type="text" inputmode="decimal" id="sellQty1" placeholder="1차 수량 (I)"></div>
             </div>
             <div class="row">
-                <div class="col"><input type="text" inputmode="text" id="sellPrice2" placeholder="2차 매도가 (J)"></div>
-                <div class="col"><input type="text" inputmode="text" id="sellQty2" placeholder="2차 수량 (K)"></div>
+                <div class="col"><input type="text" inputmode="decimal" id="sellPrice2" placeholder="2차 매도가 (J)"></div>
+                <div class="col"><input type="text" inputmode="decimal" id="sellQty2" placeholder="2차 수량 (K)"></div>
             </div>
             <div class="row">
-                <div class="col"><input type="text" inputmode="text" id="sellPrice3" placeholder="3차 매도가 (L)"></div>
-                <div class="col"><input type="text" inputmode="text" id="sellQty3" placeholder="3차 수량 (M)"></div>
+                <div class="col"><input type="text" inputmode="decimal" id="sellPrice3" placeholder="3차 매도가 (L)"></div>
+                <div class="col"><input type="text" inputmode="decimal" id="sellQty3" placeholder="3차 수량 (M)"></div>
             </div>
 
             <!-- N~P열 -->
@@ -238,15 +238,15 @@
             <div class="row">
                 <div class="col">
                     <label for="avgPrice">평단 (N열)</label>
-                    <input type="text" inputmode="text" id="avgPrice" placeholder="평단">
+                    <input type="text" inputmode="decimal" id="avgPrice" placeholder="평단">
                 </div>
                 <div class="col">
                     <label for="totalQty">수량 (O열)</label>
-                    <input type="text" inputmode="text" id="totalQty" placeholder="수량">
+                    <input type="text" inputmode="decimal" id="totalQty" placeholder="수량">
                 </div>
                 <div class="col">
                     <label for="profit">수익실현 (P열)</label>
-                    <input type="text" inputmode="text" id="profit" placeholder="수익실현">
+                    <input type="text" inputmode="decimal" id="profit" placeholder="수익실현">
                 </div>
             </div>
 
@@ -365,7 +365,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 return res.json();
             })
             .then(res => {
-                if (res.availableSeasons) updateDropdown(res.availableSeasons, res.currentSheet);
+                if (res.availableSeasons) {
+                    // 최초 접속(sheetName이 비어있음)시 Apps Script가 알려주는 currentSheet가 선택되도록 보장
+                    const activeSheet = sheetName || res.currentSheet;
+                    updateDropdown(res.availableSeasons, activeSheet);
+                }
                 const titleText = res.currentSheet === 'ALL' ? 'All' : res.currentSheet;
                 document.getElementById('dashboard-title').innerText = `📊 P of LOU (${titleText})`;
                 renderDashboard(res.rows, res.currentSheet);
@@ -380,6 +384,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateDropdown(list, current) {
         selector.innerHTML = list.map(s => `<option value="${s}" ${s === current ? 'selected' : ''}>${s === 'ALL' ? '🌐 All' : s}</option>`).join('');
+        if (current) selector.value = current;
     }
 
     function renderDashboard(rows, seasonName) {
