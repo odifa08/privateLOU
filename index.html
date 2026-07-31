@@ -124,6 +124,25 @@
         .btn-submit { background: #4ade80; color: #0b0f19; }
         .btn-submit:hover { background: #22c55e; }
     </style>
+    
+    <!-- 🔒 비밀번호 잠금 자바스크립트 -->
+    <script>
+        (function() {
+            // 원하는 비밀번호로 변경하세요
+            const MY_PASSWORD = "qwer"; 
+
+            if (sessionStorage.getItem("authenticated") !== "true") {
+                const userInput = prompt("🔒 비밀번호를 입력하세요:");
+                if (userInput === MY_PASSWORD) {
+                    sessionStorage.setItem("authenticated", "true");
+                } else {
+                    alert("비밀번호가 올바르지 않습니다.");
+                    document.write("<div style='background:#0b0f19; color:#f87171; height:100vh; display:flex; justify-content:center; align-items:center; font-family:sans-serif; font-size:20px; font-weight:bold;'>⛔ 접근 권한이 없습니다.</div>");
+                    window.stop();
+                }
+            }
+        })();
+    </script>
 </head>
 <body>
 
