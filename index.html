@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>P of LOU</title>
-    
-   <!-- 🖼️ 모바일 및 웹 아이콘 지정 최적화 -->
-    <link rel="icon" type="image/png" sizes="192x192" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
+
+    <!-- 🖼️ 홈 화면 및 브라우저 바로가기 아이콘 (캐시 강제 우회 적용) -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png?v=2">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png?v=2">
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png?v=2">
+
     <!-- 프리텐다드 웹 폰트 CDN -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <script src="https://unpkg.com/highcharts@11.4.0/highcharts.js"></script>
@@ -136,8 +134,7 @@
     <!-- 🔒 비밀번호 잠금 자바스크립트 -->
     <script>
         (function() {
-            // 원하는 비밀번호로 변경하세요
-            const MY_PASSWORD = "qwer"; 
+            const MY_PASSWORD = "1234"; // 원하시는 비밀번호로 지정하세요
 
             if (sessionStorage.getItem("authenticated") !== "true") {
                 const userInput = prompt("🔒 비밀번호를 입력하세요:");
@@ -206,50 +203,50 @@
                 <input type="date" id="date" required>
             </div>
 
-            <!-- B~G열 : 매수 내역 -->
+            <!-- B~G열 : type="text" 및 inputmode="text"로 변경하여 - 키와 특수문자 입력 허용 -->
             <div class="section-title">매수 내역 (B~G열)</div>
             <div class="row">
-                <div class="col"><input type="number" step="any" inputmode="decimal" id="buyPrice1" placeholder="1차 매수가 (B)"></div>
-                <div class="col"><input type="number" step="any" inputmode="decimal" id="buyQty1" placeholder="1차 수량 (C)"></div>
+                <div class="col"><input type="text" inputmode="text" id="buyPrice1" placeholder="1차 매수가 (B)"></div>
+                <div class="col"><input type="text" inputmode="text" id="buyQty1" placeholder="1차 수량 (C)"></div>
             </div>
             <div class="row">
-                <div class="col"><input type="number" step="any" inputmode="decimal" id="buyPrice2" placeholder="2차 매수가 (D)"></div>
-                <div class="col"><input type="number" step="any" inputmode="decimal" id="buyQty2" placeholder="2차 수량 (E)"></div>
+                <div class="col"><input type="text" inputmode="text" id="buyPrice2" placeholder="2차 매수가 (D)"></div>
+                <div class="col"><input type="text" inputmode="text" id="buyQty2" placeholder="2차 수량 (E)"></div>
             </div>
             <div class="row">
-                <div class="col"><input type="number" step="any" inputmode="decimal" id="buyPrice3" placeholder="3차 매수가 (F)"></div>
-                <div class="col"><input type="number" step="any" inputmode="decimal" id="buyQty3" placeholder="3차 수량 (G)"></div>
+                <div class="col"><input type="text" inputmode="text" id="buyPrice3" placeholder="3차 매수가 (F)"></div>
+                <div class="col"><input type="text" inputmode="text" id="buyQty3" placeholder="3차 수량 (G)"></div>
             </div>
 
-            <!-- H~M열 : 매도 내역 -->
+            <!-- H~M열 -->
             <div class="section-title">매도 내역 (H~M열)</div>
             <div class="row">
-                <div class="col"><input type="number" step="any" inputmode="decimal" id="sellPrice1" placeholder="1차 매도가 (H)"></div>
-                <div class="col"><input type="number" step="any" inputmode="decimal" id="sellQty1" placeholder="1차 수량 (I)"></div>
+                <div class="col"><input type="text" inputmode="text" id="sellPrice1" placeholder="1차 매도가 (H)"></div>
+                <div class="col"><input type="text" inputmode="text" id="sellQty1" placeholder="1차 수량 (I)"></div>
             </div>
             <div class="row">
-                <div class="col"><input type="number" step="any" inputmode="decimal" id="sellPrice2" placeholder="2차 매도가 (J)"></div>
-                <div class="col"><input type="number" step="any" inputmode="decimal" id="sellQty2" placeholder="2차 수량 (K)"></div>
+                <div class="col"><input type="text" inputmode="text" id="sellPrice2" placeholder="2차 매도가 (J)"></div>
+                <div class="col"><input type="text" inputmode="text" id="sellQty2" placeholder="2차 수량 (K)"></div>
             </div>
             <div class="row">
-                <div class="col"><input type="number" step="any" inputmode="decimal" id="sellPrice3" placeholder="3차 매도가 (L)"></div>
-                <div class="col"><input type="number" step="any" inputmode="decimal" id="sellQty3" placeholder="3차 수량 (M)"></div>
+                <div class="col"><input type="text" inputmode="text" id="sellPrice3" placeholder="3차 매도가 (L)"></div>
+                <div class="col"><input type="text" inputmode="text" id="sellQty3" placeholder="3차 수량 (M)"></div>
             </div>
 
-            <!-- N~P열 : 결과 요약 -->
+            <!-- N~P열 -->
             <div class="section-title">결과 요약 (N, O, P열)</div>
             <div class="row">
                 <div class="col">
                     <label for="avgPrice">평단 (N열)</label>
-                    <input type="number" step="any" inputmode="decimal" id="avgPrice" placeholder="평단">
+                    <input type="text" inputmode="text" id="avgPrice" placeholder="평단">
                 </div>
                 <div class="col">
                     <label for="totalQty">수량 (O열)</label>
-                    <input type="number" step="any" inputmode="decimal" id="totalQty" placeholder="수량">
+                    <input type="text" inputmode="text" id="totalQty" placeholder="수량">
                 </div>
                 <div class="col">
                     <label for="profit">수익실현 (P열)</label>
-                    <input type="number" step="any" inputmode="decimal" id="profit" placeholder="수익실현">
+                    <input type="text" inputmode="text" id="profit" placeholder="수익실현">
                 </div>
             </div>
 
@@ -262,7 +259,7 @@
 </div>
 
 <script>
-const gasAppUrl = "https://script.google.com/macros/s/AKfycbxtAdmkRJr84pEsAypvLBdgFPzuGDkyNwSOcFF4LQ8WwlnMjNjLJZrGrIGjEIXGoJW9Kw/exec";
+const gasAppUrl = "https://script.google.com/macros/s/AKfycbz-IxTrZ9q_1MUB8i3u_eQtP66lqyZ8tfxcE90LNspU1X_JllbJI21gfDpGtoVcIzXvaA/exec";
 
 document.addEventListener("DOMContentLoaded", function () {
     const selector = document.getElementById('season-selector');
@@ -272,10 +269,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeBtn = document.getElementById('closeModalBtn');
     const tradeForm = document.getElementById('tradeForm');
 
-    // 오늘 날짜 기본 세팅
     document.getElementById('date').value = new Date().toISOString().substring(0, 10);
 
-    // 모달 열기 시 시즌 선택 드롭다운 연동
     openBtn.onclick = () => {
         const mainSelector = document.getElementById('season-selector');
         const modalSelector = document.getElementById('modalSeasonSelect');
@@ -300,30 +295,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     closeBtn.onclick = () => modal.style.display = 'none';
 
-    // 폼 저장 시 '매매' 시트로 전송 (시즌 항목은 Q열 저장용)
     tradeForm.onsubmit = function(e) {
         e.preventDefault();
         
         const selectedSeason = document.getElementById('modalSeasonSelect').value;
         
         const payload = {
-            sheetName: selectedSeason, // Q열: 시즌
-            date: document.getElementById('date').value,       // A열
-            buyPrice1: document.getElementById('buyPrice1').value, // B열
-            buyQty1: document.getElementById('buyQty1').value,     // C열
-            buyPrice2: document.getElementById('buyPrice2').value, // D열
-            buyQty2: document.getElementById('buyQty2').value,     // E열
-            buyPrice3: document.getElementById('buyPrice3').value, // F열
-            buyQty3: document.getElementById('buyQty3').value,     // G열
-            sellPrice1: document.getElementById('sellPrice1').value, // H열
-            sellQty1: document.getElementById('sellQty1').value,     // I열
-            sellPrice2: document.getElementById('sellPrice2').value, // J열
-            sellQty2: document.getElementById('sellQty2').value,     // K열
-            sellPrice3: document.getElementById('sellPrice3').value, // L열
-            sellQty3: document.getElementById('sellQty3').value,     // M열
-            avgPrice: document.getElementById('avgPrice').value,     // N열
-            totalQty: document.getElementById('totalQty').value,     // O열
-            profit: document.getElementById('profit').value        // P열
+            sheetName: selectedSeason,
+            date: document.getElementById('date').value,
+            buyPrice1: document.getElementById('buyPrice1').value,
+            buyQty1: document.getElementById('buyQty1').value,
+            buyPrice2: document.getElementById('buyPrice2').value,
+            buyQty2: document.getElementById('buyQty2').value,
+            buyPrice3: document.getElementById('buyPrice3').value,
+            buyQty3: document.getElementById('buyQty3').value,
+            sellPrice1: document.getElementById('sellPrice1').value,
+            sellQty1: document.getElementById('sellQty1').value,
+            sellPrice2: document.getElementById('sellPrice2').value,
+            sellQty2: document.getElementById('sellQty2').value,
+            sellPrice3: document.getElementById('sellPrice3').value,
+            sellQty3: document.getElementById('sellQty3').value,
+            avgPrice: document.getElementById('avgPrice').value,
+            totalQty: document.getElementById('totalQty').value,
+            profit: document.getElementById('profit').value
         };
 
         loadingEl.style.display = 'flex';
@@ -341,7 +335,6 @@ document.addEventListener("DOMContentLoaded", function () {
             tradeForm.reset();
             document.getElementById('date').value = new Date().toISOString().substring(0, 10);
             
-            // 현재 대시보드 새로고침
             fetchSeasonData(document.getElementById('season-selector').value);
         })
         .catch(err => {
