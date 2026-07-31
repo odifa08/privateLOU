@@ -4,15 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>P of LOU</title>
-
-    <!-- 🖼️ 바로가기 및 PWA 웹 앱 아이콘 설정 -->
-    <link rel="icon" type="image/png" sizes="192x192" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png?v=4">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png?v=4">
-    <link rel="shortcut icon" href="https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png?v=4">
-    
-    <!-- 모바일 바로가기 앱 설정 (Manifest) -->
-    <link rel="manifest" href='data:application/manifest+json,{"name":"P of LOU","short_name":"P of LOU","start_url":".","display":"standalone","background_color":"#0b0f19","theme_color":"#0b0f19","icons":[{"src":"https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png?v=4","sizes":"192x192","type":"image/png"},{"src":"https://raw.githubusercontent.com/odifa08/privateLOU/main/icon.png?v=4","sizes":"512x512","type":"image/png"}]}'>
-
     <!-- 프리텐다드 웹 폰트 CDN -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <script src="https://unpkg.com/highcharts@11.4.0/highcharts.js"></script>
@@ -114,24 +105,6 @@
         .row { display: flex; gap: 8px; margin-bottom: 8px; }
         .col { flex: 1; }
         
-        /* 마이너스 토글 입력 그룹 */
-        .input-group { display: flex; align-items: center; width: 100%; }
-        .input-group input { flex: 1; border-top-right-radius: 0; border-bottom-right-radius: 0; }
-        .btn-minus {
-            background: #334155;
-            color: #38bdf8;
-            border: 1px solid #334155;
-            border-left: none;
-            padding: 0 10px;
-            height: 35px;
-            border-top-right-radius: 6px;
-            border-bottom-right-radius: 6px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .btn-minus:active { background: #475569; }
-
         input, select {
             width: 100%;
             padding: 8px 10px;
@@ -155,7 +128,8 @@
     <!-- 🔒 비밀번호 잠금 자바스크립트 -->
     <script>
         (function() {
-            const MY_PASSWORD = "1234";
+            // 원하는 비밀번호로 변경하세요
+            const MY_PASSWORD = "1234"; 
 
             if (sessionStorage.getItem("authenticated") !== "true") {
                 const userInput = prompt("🔒 비밀번호를 입력하세요:");
@@ -212,60 +186,62 @@
     <div class="modal-content">
         <div class="modal-header">🚀 매매 시트 저장 (A~Q열)</div>
         <form id="tradeForm">
+            <!-- Q열에 들어갈 시즌 선택 드롭다운 -->
             <div class="form-group">
                 <label for="modalSeasonSelect">시즌 지정 (Q열 저장 항목)</label>
                 <select id="modalSeasonSelect" style="color:#38bdf8; font-weight:bold;"></select>
             </div>
 
+            <!-- A열 -->
             <div class="form-group">
                 <label for="date">거래 날짜 (A열)</label>
                 <input type="date" id="date" required>
             </div>
 
-            <!-- 매수 내역 (숫자 키패드 + 마이너스 토글 버튼) -->
+            <!-- B~G열 -->
             <div class="section-title">매수 내역 (B~G열)</div>
             <div class="row">
-                <div class="col"><div class="input-group"><input type="number" step="any" inputmode="decimal" id="buyPrice1" placeholder="1차 매수가(B)"><button type="button" class="btn-minus" onclick="toggleMinus('buyPrice1')">±</button></div></div>
-                <div class="col"><div class="input-group"><input type="number" step="any" inputmode="decimal" id="buyQty1" placeholder="1차 수량(C)"><button type="button" class="btn-minus" onclick="toggleMinus('buyQty1')">±</button></div></div>
+                <div class="col"><input type="number" step="any" id="buyPrice1" placeholder="1차 매수가 (B)"></div>
+                <div class="col"><input type="number" step="any" id="buyQty1" placeholder="1차 수량 (C)"></div>
             </div>
             <div class="row">
-                <div class="col"><div class="input-group"><input type="number" step="any" inputmode="decimal" id="buyPrice2" placeholder="2차 매수가(D)"><button type="button" class="btn-minus" onclick="toggleMinus('buyPrice2')">±</button></div></div>
-                <div class="col"><div class="input-group"><input type="number" step="any" inputmode="decimal" id="buyQty2" placeholder="2차 수량(E)"><button type="button" class="btn-minus" onclick="toggleMinus('buyQty2')">±</button></div></div>
+                <div class="col"><input type="number" step="any" id="buyPrice2" placeholder="2차 매수가 (D)"></div>
+                <div class="col"><input type="number" step="any" id="buyQty2" placeholder="2차 수량 (E)"></div>
             </div>
             <div class="row">
-                <div class="col"><div class="input-group"><input type="number" step="any" inputmode="decimal" id="buyPrice3" placeholder="3차 매수가(F)"><button type="button" class="btn-minus" onclick="toggleMinus('buyPrice3')">±</button></div></div>
-                <div class="col"><div class="input-group"><input type="number" step="any" inputmode="decimal" id="buyQty3" placeholder="3차 수량(G)"><button type="button" class="btn-minus" onclick="toggleMinus('buyQty3')">±</button></div></div>
+                <div class="col"><input type="number" step="any" id="buyPrice3" placeholder="3차 매수가 (F)"></div>
+                <div class="col"><input type="number" step="any" id="buyQty3" placeholder="3차 수량 (G)"></div>
             </div>
 
-            <!-- 매도 내역 -->
+            <!-- H~M열 -->
             <div class="section-title">매도 내역 (H~M열)</div>
             <div class="row">
-                <div class="col"><div class="input-group"><input type="number" step="any" inputmode="decimal" id="sellPrice1" placeholder="1차 매도가(H)"><button type="button" class="btn-minus" onclick="toggleMinus('sellPrice1')">±</button></div></div>
-                <div class="col"><div class="input-group"><input type="number" step="any" inputmode="decimal" id="sellQty1" placeholder="1차 수량(I)"><button type="button" class="btn-minus" onclick="toggleMinus('sellQty1')">±</button></div></div>
+                <div class="col"><input type="number" step="any" id="sellPrice1" placeholder="1차 매도가 (H)"></div>
+                <div class="col"><input type="number" step="any" id="sellQty1" placeholder="1차 수량 (I)"></div>
             </div>
             <div class="row">
-                <div class="col"><div class="input-group"><input type="number" step="any" inputmode="decimal" id="sellPrice2" placeholder="2차 매도가(J)"><button type="button" class="btn-minus" onclick="toggleMinus('sellPrice2')">±</button></div></div>
-                <div class="col"><div class="input-group"><input type="number" step="any" inputmode="decimal" id="sellQty2" placeholder="2차 수량(K)"><button type="button" class="btn-minus" onclick="toggleMinus('sellQty2')">±</button></div></div>
+                <div class="col"><input type="number" step="any" id="sellPrice2" placeholder="2차 매도가 (J)"></div>
+                <div class="col"><input type="number" step="any" id="sellQty2" placeholder="2차 수량 (K)"></div>
             </div>
             <div class="row">
-                <div class="col"><div class="input-group"><input type="number" step="any" inputmode="decimal" id="sellPrice3" placeholder="3차 매도가(L)"><button type="button" class="btn-minus" onclick="toggleMinus('sellPrice3')">±</button></div></div>
-                <div class="col"><div class="input-group"><input type="number" step="any" inputmode="decimal" id="sellQty3" placeholder="3차 수량(M)"><button type="button" class="btn-minus" onclick="toggleMinus('sellQty3')">±</button></div></div>
+                <div class="col"><input type="number" step="any" id="sellPrice3" placeholder="3차 매도가 (L)"></div>
+                <div class="col"><input type="number" step="any" id="sellQty3" placeholder="3차 수량 (M)"></div>
             </div>
 
-            <!-- 결과 요약 -->
+            <!-- N~P열 -->
             <div class="section-title">결과 요약 (N, O, P열)</div>
             <div class="row">
                 <div class="col">
                     <label for="avgPrice">평단 (N열)</label>
-                    <div class="input-group"><input type="number" step="any" inputmode="decimal" id="avgPrice" placeholder="평단"><button type="button" class="btn-minus" onclick="toggleMinus('avgPrice')">±</button></div>
+                    <input type="number" step="any" id="avgPrice" placeholder="평단">
                 </div>
                 <div class="col">
                     <label for="totalQty">수량 (O열)</label>
-                    <div class="input-group"><input type="number" step="any" inputmode="decimal" id="totalQty" placeholder="수량"><button type="button" class="btn-minus" onclick="toggleMinus('totalQty')">±</button></div>
+                    <input type="number" step="any" id="totalQty" placeholder="수량">
                 </div>
                 <div class="col">
                     <label for="profit">수익실현 (P열)</label>
-                    <div class="input-group"><input type="number" step="any" inputmode="decimal" id="profit" placeholder="수익실현"><button type="button" class="btn-minus" onclick="toggleMinus('profit')">±</button></div>
+                    <input type="number" step="any" id="profit" placeholder="수익실현">
                 </div>
             </div>
 
@@ -280,18 +256,6 @@
 <script>
 const gasAppUrl = "https://script.google.com/macros/s/AKfycbz-IxTrZ9q_1MUB8i3u_eQtP66lqyZ8tfxcE90LNspU1X_JllbJI21gfDpGtoVcIzXvaA/exec";
 
-// 마이너스(±) 토글 함수
-function toggleMinus(id) {
-    const input = document.getElementById(id);
-    if (!input) return;
-    let val = input.value.trim();
-    if (val.startsWith('-')) {
-        input.value = val.substring(1);
-    } else {
-        input.value = '-' + val;
-    }
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     const selector = document.getElementById('season-selector');
     const loadingEl = document.getElementById('loading');
@@ -300,8 +264,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeBtn = document.getElementById('closeModalBtn');
     const tradeForm = document.getElementById('tradeForm');
 
+    // 오늘 날짜 기본 세팅
     document.getElementById('date').value = new Date().toISOString().substring(0, 10);
 
+    // 모달 열기 시 시즌 선택 드롭다운 연동
     openBtn.onclick = () => {
         const mainSelector = document.getElementById('season-selector');
         const modalSelector = document.getElementById('modalSeasonSelect');
@@ -326,29 +292,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
     closeBtn.onclick = () => modal.style.display = 'none';
 
+    // 폼 저장 시 '매매' 시트로 전송 (시즌 항목은 Q열 저장용)
     tradeForm.onsubmit = function(e) {
         e.preventDefault();
         
         const selectedSeason = document.getElementById('modalSeasonSelect').value;
         
         const payload = {
-            sheetName: selectedSeason,
-            date: document.getElementById('date').value,
-            buyPrice1: document.getElementById('buyPrice1').value,
-            buyQty1: document.getElementById('buyQty1').value,
-            buyPrice2: document.getElementById('buyPrice2').value,
-            buyQty2: document.getElementById('buyQty2').value,
-            buyPrice3: document.getElementById('buyPrice3').value,
-            buyQty3: document.getElementById('buyQty3').value,
-            sellPrice1: document.getElementById('sellPrice1').value,
-            sellQty1: document.getElementById('sellQty1').value,
-            sellPrice2: document.getElementById('sellPrice2').value,
-            sellQty2: document.getElementById('sellQty2').value,
-            sellPrice3: document.getElementById('sellPrice3').value,
-            sellQty3: document.getElementById('sellQty3').value,
-            avgPrice: document.getElementById('avgPrice').value,
-            totalQty: document.getElementById('totalQty').value,
-            profit: document.getElementById('profit').value
+            sheetName: selectedSeason, // Q열: 시즌
+            date: document.getElementById('date').value,       // A열
+            buyPrice1: document.getElementById('buyPrice1').value, // B열
+            buyQty1: document.getElementById('buyQty1').value,     // C열
+            buyPrice2: document.getElementById('buyPrice2').value, // D열
+            buyQty2: document.getElementById('buyQty2').value,     // E열
+            buyPrice3: document.getElementById('buyPrice3').value, // F열
+            buyQty3: document.getElementById('buyQty3').value,     // G열
+            sellPrice1: document.getElementById('sellPrice1').value, // H열
+            sellQty1: document.getElementById('sellQty1').value,     // I열
+            sellPrice2: document.getElementById('sellPrice2').value, // J열
+            sellQty2: document.getElementById('sellQty2').value,     // K열
+            sellPrice3: document.getElementById('sellPrice3').value, // L열
+            sellQty3: document.getElementById('sellQty3').value,     // M열
+            avgPrice: document.getElementById('avgPrice').value,     // N열
+            totalQty: document.getElementById('totalQty').value,     // O열
+            profit: document.getElementById('profit').value        // P열
         };
 
         loadingEl.style.display = 'flex';
@@ -366,6 +333,7 @@ document.addEventListener("DOMContentLoaded", function () {
             tradeForm.reset();
             document.getElementById('date').value = new Date().toISOString().substring(0, 10);
             
+            // 현재 대시보드 새로고침
             fetchSeasonData(document.getElementById('season-selector').value);
         })
         .catch(err => {
@@ -396,11 +364,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return res.json();
             })
             .then(res => {
-                if (res.availableSeasons) {
-                    // 전달받은 현재 진행 중인 시즌(res.currentSheet) 우선 선택
-                    const activeSheet = sheetName || res.currentSheet;
-                    updateDropdown(res.availableSeasons, activeSheet);
-                }
+                if (res.availableSeasons) updateDropdown(res.availableSeasons, res.currentSheet);
                 const titleText = res.currentSheet === 'ALL' ? 'All' : res.currentSheet;
                 document.getElementById('dashboard-title').innerText = `📊 P of LOU (${titleText})`;
                 renderDashboard(res.rows, res.currentSheet);
@@ -415,9 +379,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateDropdown(list, current) {
         selector.innerHTML = list.map(s => `<option value="${s}" ${s === current ? 'selected' : ''}>${s === 'ALL' ? '🌐 All' : s}</option>`).join('');
-        if (current) {
-            selector.value = current;
-        }
     }
 
     function renderDashboard(rows, seasonName) {
