@@ -260,19 +260,19 @@
 <!-- 입력 모달 -->
 <div class="modal-overlay" id="inputModal">
     <div class="modal-content">
-        <div class="modal-header">🚀 매매 시트</div>
+        <div class="modal-header">🚀 매매 시트 저장 (A~Q열)</div>
         <form id="tradeForm">
             <div class="form-group">
-                <label for="modalSeasonSelect">시즌</label>
+                <label for="modalSeasonSelect">시즌 지정 (Q열 저장 항목)</label>
                 <select id="modalSeasonSelect" style="color:#38bdf8; font-weight:bold;"></select>
             </div>
 
             <div class="form-group">
-                <label for="date">거래 날짜</label>
+                <label for="date">거래 날짜 (A열)</label>
                 <input type="date" id="date" required>
             </div>
 
-            <div class="section-title">매수</div>
+            <div class="section-title">매수 내역 (B~G열)</div>
             <div class="row">
                 <div class="col"><input type="number" step="any" id="buyPrice1" placeholder="1차 매수가 (B)"></div>
                 <div class="col"><input type="number" step="any" id="buyQty1" placeholder="1차 수량 (C)"></div>
@@ -286,7 +286,7 @@
                 <div class="col"><input type="number" step="any" id="buyQty3" placeholder="3차 수량 (G)"></div>
             </div>
 
-            <div class="section-title">매도</div>
+            <div class="section-title">매도 내역 (H~M열)</div>
             <div class="row">
                 <div class="col"><input type="number" step="any" id="sellPrice1" placeholder="1차 매도가 (H)"></div>
                 <div class="col"><input type="number" step="any" id="sellQty1" placeholder="1차 수량 (I)"></div>
@@ -300,19 +300,18 @@
                 <div class="col"><input type="number" step="any" id="sellQty3" placeholder="3차 수량 (M)"></div>
             </div>
 
-            <div class="section-title">결과</div>
+            <div class="section-title">결과 요약 (N, O, P열)</div>
             <div class="row">
                 <div class="col">
-                    <label for="avgPrice">평단</label>
+                    <label for="avgPrice">평단 (N열)</label>
                     <input type="number" step="any" id="avgPrice" placeholder="평단">
                 </div>
                 <div class="col">
-                    <label for="totalQty">수량</label>
+                    <label for="totalQty">수량 (O열)</label>
                     <input type="number" step="any" id="totalQty" placeholder="수량">
                 </div>
                 <div class="col">
-                    <label for="profit">수익실현</label>
-                    <!-- +/- 토글 버튼 추가 -->
+                    <label for="profit">수익실현 (P열)</label>
                     <div class="profit-input-group">
                         <button type="button" id="toggleSignBtn" class="btn-toggle-sign">+</button>
                         <input type="number" step="any" id="profit" placeholder="수익실현">
@@ -342,7 +341,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('date').value = new Date().toISOString().substring(0, 10);
 
-    // +/- 토글 동작 구현
+    // +/- 토글 클릭 이벤트 핸들러
     toggleSignBtn.onclick = function() {
         if (this.innerText === '+') {
             this.innerText = '-';
@@ -381,33 +380,34 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         
         const selectedSeason = document.getElementById('modalSeasonSelect').value;
-        let rawProfit = document.getElementById('profit').value;
+        const inputProfitVal = document.getElementById('profit').value;
         
-        // +/- 토글 부호 적용
-        if (rawProfit !== "" && !isNaN(rawProfit)) {
-            const numProfit = Math.abs(parseFloat(rawProfit));
-            rawProfit = toggleSignBtn.innerText === '-' ? -numProfit : numProfit;
+        let finalProfit = "";
+        if (inputProfitVal !== "" && !isNaN(inputProfitVal)) {
+            const numVal = Math.abs(parseFloat(inputProfitVal));
+            finalProfit = (toggleSignBtn.innerText === '-') ? -numVal : numVal;
         }
-
-        // GAS 전송 데이터 구성 (URLSearchParams 방식)
-        const formData = new URLSearchParams();
-        formData.append('sheetName', selectedSeason);
-        formData.append('date', document.getElementById('date').value);
-        formData.append('buyPrice1', document.getElementById('buyPrice1').value);
-        formData.append('buyQty1', document.getElementById('buyQty1').value);
-        formData.append('buyPrice2', document.getElementById('buyPrice2').value);
-        formData.append('buyQty2', document.getElementById('buyQty2').value);
-        formData.append('buyPrice3', document.getElementById('buyPrice3').value);
-        formData.append('buyQty3', document.getElementById('buyQty3').value);
-        formData.append('sellPrice1', document.getElementById('sellPrice1').value);
-        formData.append('sellQty1', document.getElementById('sellQty1').value);
-        formData.append('sellPrice2', document.getElementById('sellPrice2').value);
-        formData.append('sellQty2', document.getElementById('sellQty2').value);
-        formData.append('sellPrice3', document.getElementById('sellPrice3').value);
-        formData.append('sellQty3', document.getElementById('sellQty3').value);
-        formData.append('avgPrice', document.getElementById('avgPrice').value);
-        formData.append('totalQty', document.getElementById('totalQty').value);
-        formData.append('profit', rawProfit);
+        
+        // JSON Payload 구조로 GAS에 제출 (기존 index(2) 호환성 유지)
+        const payload = {
+            sheetName: selectedSeason,
+            date: document.getElementById('date').value,
+            buyPrice1: document.getElementById('buyPrice1').value,
+            buyQty1: document.getElementById('buyQty1').value,
+            buyPrice2: document.getElementById('buyPrice2').value,
+            buyQty2: document.getElementById('buyQty2').value,
+            buyPrice3: document.getElementById('buyPrice3').value,
+            buyQty3: document.getElementById('buyQty3').value,
+            sellPrice1: document.getElementById('sellPrice1').value,
+            sellQty1: document.getElementById('sellQty1').value,
+            sellPrice2: document.getElementById('sellPrice2').value,
+            sellQty2: document.getElementById('sellQty2').value,
+            sellPrice3: document.getElementById('sellPrice3').value,
+            sellQty3: document.getElementById('sellQty3').value,
+            avgPrice: document.getElementById('avgPrice').value,
+            totalQty: document.getElementById('totalQty').value,
+            profit: finalProfit
+        };
 
         loadingEl.style.display = 'flex';
         loadingEl.innerText = `[매매] 시트에 (${selectedSeason}) 저장 중...`;
@@ -415,21 +415,20 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch(gasAppUrl, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: formData.toString()
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // GAS no-cors JSON 처리 표준
+            body: JSON.stringify(payload)
         })
         .then(() => {
             alert(`[매매] 시트에 ${selectedSeason} 데이터가 정상적으로 저장되었습니다!`);
             modal.style.display = 'none';
             tradeForm.reset();
             
-            // 토글 버튼 초기화
+            // 부호 토글 초기화 (+)
             toggleSignBtn.innerText = '+';
             toggleSignBtn.classList.remove('minus');
 
             document.getElementById('date').value = new Date().toISOString().substring(0, 10);
             
-            // 데이터 재로드
             setTimeout(() => {
                 fetchSeasonData(document.getElementById('season-selector').value);
             }, 1000);
