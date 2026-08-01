@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>P of LOU</title>
     
-    <!-- 1. 파비콘 및 앱 아이콘 변경 (icon.png) -->
+    <!-- 파비콘 및 앱 아이콘 -->
     <link rel="icon" type="image/png" href="./icon.png">
     <link rel="apple-touch-icon" href="./icon.png">
     <link rel="manifest" href='data:application/manifest+json,{"name":"P of LOU","short_name":"P of LOU","start_url":".","display":"standalone","background_color":"#0b0f19","theme_color":"#0b0f19","icons":[{"src":"icon.png","sizes":"512x512","type":"image/png"}]}'>
@@ -23,7 +23,6 @@
             padding: 12px; 
         }
 
-        /* 2. 헤더 바 정돈 (아이콘 크기 및 시즌 셀렉트 박스 고정) */
         .header-bar { 
             display: flex; 
             justify-content: space-between; 
@@ -42,7 +41,6 @@
             white-space: nowrap;
         }
 
-        /* 아이콘 크기 고정 */
         .header-icon {
             width: 26px;
             height: 26px;
@@ -51,7 +49,6 @@
             flex-shrink: 0;
         }
 
-        /* 시즌 셀렉트 높이/크기 고정 */
         .season-select { 
             background: #1e293b; 
             color: #38bdf8; 
@@ -92,7 +89,6 @@
         .card-sub { font-size: 11px; color: #64748b; }
         #loading { position: fixed; inset: 0; background: rgba(11, 15, 25, 0.9); display: flex; justify-content: center; align-items: center; color: #38bdf8; font-size: 18px; font-weight: bold; z-index: 9999; }
 
-        /* Floating Action Button (+) */
         .fab {
             position: fixed;
             bottom: 25px;
@@ -114,7 +110,6 @@
         }
         .fab:hover { transform: scale(1.08); background-color: #7dd3fc; }
 
-        /* 모달 스타일 */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -166,7 +161,7 @@
         }
         input:focus, select:focus { outline: none; border-color: #38bdf8; }
 
-        /* 수익실현 그룹 (입력창 뒤쪽에 토글 버튼 배치) */
+        /* 수익실현 (입력창 뒤쪽에 토글 배치) */
         .profit-input-group {
             display: flex;
             gap: 6px;
@@ -199,7 +194,7 @@
         .btn-submit:hover { background: #22c55e; }
     </style>
     
-    <!-- 🔒 비밀번호 잠금 자바스크립트 -->
+    <!-- 비밀번호 잠금 -->
     <script>
         (function() {
             const MY_PASSWORD = "qwer"; 
@@ -254,10 +249,8 @@
     <div id="cum-return-chart-container" class="chart-box"></div>
 </div>
 
-<!-- Floating Action Button (+) -->
 <div class="fab" id="openModalBtn">+</div>
 
-<!-- 입력 모달 -->
 <div class="modal-overlay" id="inputModal">
     <div class="modal-content">
         <div class="modal-header">🚀 매매 시트 저장 (A~Q열)</div>
@@ -312,7 +305,6 @@
                 </div>
                 <div class="col">
                     <label for="profit">수익실현 (P열)</label>
-                    <!-- 입력창이 앞, 토글 버튼이 뒤쪽에 오도록 배치 -->
                     <div class="profit-input-group">
                         <input type="number" step="any" id="profit" placeholder="수익실현">
                         <button type="button" id="toggleSignBtn" class="btn-toggle-sign">+</button>
@@ -329,7 +321,7 @@
 </div>
 
 <script>
-const gasAppUrl = "https://script.google.com/macros/s/AKfycbw0YAWywc-4ioF0gnu71AbhJlNJLhahAG6ey0JR6Pn-r4qx7uY4L7p4V1_AC9lm-xdygg/exec";
+const gasAppUrl = "https://script.google.com/macros/s/AKfycbzzkjrmHmsR6-cIqL0Wahcu3_lSBAAs8FLAc9wo_p4CFWL0dyrzjlqjegtsrf1-83T15w/exec";
 
 document.addEventListener("DOMContentLoaded", function () {
     const selector = document.getElementById('season-selector');
@@ -342,7 +334,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('date').value = new Date().toISOString().substring(0, 10);
 
-    // 토글 버튼 클릭 시 부호 전환
     toggleSignBtn.onclick = function() {
         if (this.innerText === '+') {
             this.innerText = '-';
@@ -377,81 +368,68 @@ document.addEventListener("DOMContentLoaded", function () {
 
     closeBtn.onclick = () => modal.style.display = 'none';
 
+    // CORS 차단을 완전 차단하는 URLSearchParams 폼 전송 방식
     tradeForm.onsubmit = function(e) {
         e.preventDefault();
         
         const selectedSeason = document.getElementById('modalSeasonSelect').value;
         const inputProfitVal = document.getElementById('profit').value;
         
-        // 수익실현 부호 계산
         let finalProfit = "";
         if (inputProfitVal !== "" && !isNaN(inputProfitVal)) {
             const numVal = Math.abs(parseFloat(inputProfitVal));
             finalProfit = (toggleSignBtn.innerText === '-') ? -numVal : numVal;
         }
         
-        const payload = {
-            sheetName: selectedSeason,
-            date: document.getElementById('date').value,
-            buyPrice1: document.getElementById('buyPrice1').value,
-            buyQty1: document.getElementById('buyQty1').value,
-            buyPrice2: document.getElementById('buyPrice2').value,
-            buyQty2: document.getElementById('buyQty2').value,
-            buyPrice3: document.getElementById('buyPrice3').value,
-            buyQty3: document.getElementById('buyQty3').value,
-            sellPrice1: document.getElementById('sellPrice1').value,
-            sellQty1: document.getElementById('sellQty1').value,
-            sellPrice2: document.getElementById('sellPrice2').value,
-            sellQty2: document.getElementById('sellQty2').value,
-            sellPrice3: document.getElementById('sellPrice3').value,
-            sellQty3: document.getElementById('sellQty3').value,
-            avgPrice: document.getElementById('avgPrice').value,
-            totalQty: document.getElementById('totalQty').value,
-            profit: finalProfit
-        };
+        const params = new URLSearchParams();
+        params.append('sheetName', selectedSeason);
+        params.append('date', document.getElementById('date').value);
+        params.append('buyPrice1', document.getElementById('buyPrice1').value);
+        params.append('buyQty1', document.getElementById('buyQty1').value);
+        params.append('buyPrice2', document.getElementById('buyPrice2').value);
+        params.append('buyQty2', document.getElementById('buyQty2').value);
+        params.append('buyPrice3', document.getElementById('buyPrice3').value);
+        params.append('buyQty3', document.getElementById('buyQty3').value);
+        params.append('sellPrice1', document.getElementById('sellPrice1').value);
+        params.append('sellQty1', document.getElementById('sellQty1').value);
+        params.append('sellPrice2', document.getElementById('sellPrice2').value);
+        params.append('sellQty2', document.getElementById('sellQty2').value);
+        params.append('sellPrice3', document.getElementById('sellPrice3').value);
+        params.append('sellQty3', document.getElementById('sellQty3').value);
+        params.append('avgPrice', document.getElementById('avgPrice').value);
+        params.append('totalQty', document.getElementById('totalQty').value);
+        params.append('profit', finalProfit);
 
         loadingEl.style.display = 'flex';
         loadingEl.innerText = `[매매] 시트에 (${selectedSeason}) 저장 중...`;
 
-        // GAS로 데이터 전송
+        // mode: 'no-cors'를 적용하여 CORS 에러 무조건 차단
         fetch(gasAppUrl, {
             method: 'POST',
+            mode: 'no-cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: JSON.stringify(payload)
+            body: params.toString()
         })
-        .then(response => {
-            // mode: 'no-cors'를 제외하여 정상 응답 판별
-            return response.json();
-        })
-        .then(res => {
-            alert(`[매매] 시트에 ${selectedSeason} 데이터가 성공적으로 저장되었습니다!`);
+        .then(() => {
+            alert(`[매매] 시트에 ${selectedSeason} 데이터 저장 완료!`);
             modal.style.display = 'none';
             tradeForm.reset();
             
-            // 토글 초기화 (+)
             toggleSignBtn.innerText = '+';
             toggleSignBtn.classList.remove('minus');
-
             document.getElementById('date').value = new Date().toISOString().substring(0, 10);
             
-            fetchSeasonData(document.getElementById('season-selector').value);
-        })
-        .catch(err => {
-            // CORS 차단 발생 시 백업 처리 (구글 웹앱 리다이렉트 응답 호환)
-            console.log("CORS/Fetch notice:", err);
-            alert(`[매매] 시트에 저장 요청이 전송되었습니다.`);
-            modal.style.display = 'none';
-            tradeForm.reset();
-
-            toggleSignBtn.innerText = '+';
-            toggleSignBtn.classList.remove('minus');
-            document.getElementById('date').value = new Date().toISOString().substring(0, 10);
-
+            // 데이터 갱신
             setTimeout(() => {
                 fetchSeasonData(document.getElementById('season-selector').value);
             }, 1200);
+        })
+        .catch(err => {
+            console.error(err);
+            alert('전송 중 오류가 발생했습니다.');
+            loadingEl.style.display = 'none';
         });
     };
 
