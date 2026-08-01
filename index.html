@@ -166,6 +166,32 @@
         }
         input:focus, select:focus { outline: none; border-color: #38bdf8; }
 
+        /* 수익실현 부호 토글 버튼 스타일 */
+        .profit-input-group {
+            display: flex;
+            gap: 6px;
+        }
+        .btn-toggle-sign {
+            width: 38px;
+            height: 35px;
+            background: #4ade80;
+            color: #0b0f19;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+        .btn-toggle-sign.minus {
+            background: #f87171;
+            color: #ffffff;
+        }
+
         .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
         .btn { padding: 10px 18px; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; border: none; }
         .btn-cancel { background: #334155; color: #cbd5e1; }
@@ -173,7 +199,7 @@
         .btn-submit:hover { background: #22c55e; }
     </style>
     
-    <!-- 🔒 index(2) 기준 비밀번호 잠금 자바스크립트 -->
+    <!-- 🔒 비밀번호 잠금 자바스크립트 -->
     <script>
         (function() {
             const MY_PASSWORD = "qwer"; 
@@ -231,22 +257,22 @@
 <!-- Floating Action Button (+) -->
 <div class="fab" id="openModalBtn">+</div>
 
-<!-- 입력 모달 (index(2) 원본 필드 유지) -->
+<!-- 입력 모달 -->
 <div class="modal-overlay" id="inputModal">
     <div class="modal-content">
-        <div class="modal-header">🚀 매매 시트 저장 (A~Q열)</div>
+        <div class="modal-header">🚀 매매 시트</div>
         <form id="tradeForm">
             <div class="form-group">
-                <label for="modalSeasonSelect">시즌 지정 (Q열 저장 항목)</label>
+                <label for="modalSeasonSelect">시즌</label>
                 <select id="modalSeasonSelect" style="color:#38bdf8; font-weight:bold;"></select>
             </div>
 
             <div class="form-group">
-                <label for="date">거래 날짜 (A열)</label>
+                <label for="date">거래 날짜</label>
                 <input type="date" id="date" required>
             </div>
 
-            <div class="section-title">매수 내역 (B~G열)</div>
+            <div class="section-title">매수</div>
             <div class="row">
                 <div class="col"><input type="number" step="any" id="buyPrice1" placeholder="1차 매수가 (B)"></div>
                 <div class="col"><input type="number" step="any" id="buyQty1" placeholder="1차 수량 (C)"></div>
@@ -260,7 +286,7 @@
                 <div class="col"><input type="number" step="any" id="buyQty3" placeholder="3차 수량 (G)"></div>
             </div>
 
-            <div class="section-title">매도 내역 (H~M열)</div>
+            <div class="section-title">매도</div>
             <div class="row">
                 <div class="col"><input type="number" step="any" id="sellPrice1" placeholder="1차 매도가 (H)"></div>
                 <div class="col"><input type="number" step="any" id="sellQty1" placeholder="1차 수량 (I)"></div>
@@ -274,19 +300,23 @@
                 <div class="col"><input type="number" step="any" id="sellQty3" placeholder="3차 수량 (M)"></div>
             </div>
 
-            <div class="section-title">결과 요약 (N, O, P열)</div>
+            <div class="section-title">결과</div>
             <div class="row">
                 <div class="col">
-                    <label for="avgPrice">평단 (N열)</label>
+                    <label for="avgPrice">평단</label>
                     <input type="number" step="any" id="avgPrice" placeholder="평단">
                 </div>
                 <div class="col">
-                    <label for="totalQty">수량 (O열)</label>
+                    <label for="totalQty">수량</label>
                     <input type="number" step="any" id="totalQty" placeholder="수량">
                 </div>
                 <div class="col">
-                    <label for="profit">수익실현 (P열)</label>
-                    <input type="number" step="any" id="profit" placeholder="수익실현">
+                    <label for="profit">수익실현</label>
+                    <!-- +/- 토글 버튼 추가 -->
+                    <div class="profit-input-group">
+                        <button type="button" id="toggleSignBtn" class="btn-toggle-sign">+</button>
+                        <input type="number" step="any" id="profit" placeholder="수익실현">
+                    </div>
                 </div>
             </div>
 
@@ -308,8 +338,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const openBtn = document.getElementById('openModalBtn');
     const closeBtn = document.getElementById('closeModalBtn');
     const tradeForm = document.getElementById('tradeForm');
+    const toggleSignBtn = document.getElementById('toggleSignBtn');
 
     document.getElementById('date').value = new Date().toISOString().substring(0, 10);
+
+    // +/- 토글 동작 구현
+    toggleSignBtn.onclick = function() {
+        if (this.innerText === '+') {
+            this.innerText = '-';
+            this.classList.add('minus');
+        } else {
+            this.innerText = '+';
+            this.classList.remove('minus');
+        }
+    };
 
     openBtn.onclick = () => {
         const mainSelector = document.getElementById('season-selector');
@@ -339,26 +381,33 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         
         const selectedSeason = document.getElementById('modalSeasonSelect').value;
+        let rawProfit = document.getElementById('profit').value;
         
-        const payload = {
-            sheetName: selectedSeason,
-            date: document.getElementById('date').value,
-            buyPrice1: document.getElementById('buyPrice1').value,
-            buyQty1: document.getElementById('buyQty1').value,
-            buyPrice2: document.getElementById('buyPrice2').value,
-            buyQty2: document.getElementById('buyQty2').value,
-            buyPrice3: document.getElementById('buyPrice3').value,
-            buyQty3: document.getElementById('buyQty3').value,
-            sellPrice1: document.getElementById('sellPrice1').value,
-            sellQty1: document.getElementById('sellQty1').value,
-            sellPrice2: document.getElementById('sellPrice2').value,
-            sellQty2: document.getElementById('sellQty2').value,
-            sellPrice3: document.getElementById('sellPrice3').value,
-            sellQty3: document.getElementById('sellQty3').value,
-            avgPrice: document.getElementById('avgPrice').value,
-            totalQty: document.getElementById('totalQty').value,
-            profit: document.getElementById('profit').value
-        };
+        // +/- 토글 부호 적용
+        if (rawProfit !== "" && !isNaN(rawProfit)) {
+            const numProfit = Math.abs(parseFloat(rawProfit));
+            rawProfit = toggleSignBtn.innerText === '-' ? -numProfit : numProfit;
+        }
+
+        // GAS 전송 데이터 구성 (URLSearchParams 방식)
+        const formData = new URLSearchParams();
+        formData.append('sheetName', selectedSeason);
+        formData.append('date', document.getElementById('date').value);
+        formData.append('buyPrice1', document.getElementById('buyPrice1').value);
+        formData.append('buyQty1', document.getElementById('buyQty1').value);
+        formData.append('buyPrice2', document.getElementById('buyPrice2').value);
+        formData.append('buyQty2', document.getElementById('buyQty2').value);
+        formData.append('buyPrice3', document.getElementById('buyPrice3').value);
+        formData.append('buyQty3', document.getElementById('buyQty3').value);
+        formData.append('sellPrice1', document.getElementById('sellPrice1').value);
+        formData.append('sellQty1', document.getElementById('sellQty1').value);
+        formData.append('sellPrice2', document.getElementById('sellPrice2').value);
+        formData.append('sellQty2', document.getElementById('sellQty2').value);
+        formData.append('sellPrice3', document.getElementById('sellPrice3').value);
+        formData.append('sellQty3', document.getElementById('sellQty3').value);
+        formData.append('avgPrice', document.getElementById('avgPrice').value);
+        formData.append('totalQty', document.getElementById('totalQty').value);
+        formData.append('profit', rawProfit);
 
         loadingEl.style.display = 'flex';
         loadingEl.innerText = `[매매] 시트에 (${selectedSeason}) 저장 중...`;
@@ -366,16 +415,24 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch(gasAppUrl, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formData.toString()
         })
         .then(() => {
             alert(`[매매] 시트에 ${selectedSeason} 데이터가 정상적으로 저장되었습니다!`);
             modal.style.display = 'none';
             tradeForm.reset();
+            
+            // 토글 버튼 초기화
+            toggleSignBtn.innerText = '+';
+            toggleSignBtn.classList.remove('minus');
+
             document.getElementById('date').value = new Date().toISOString().substring(0, 10);
             
-            fetchSeasonData(document.getElementById('season-selector').value);
+            // 데이터 재로드
+            setTimeout(() => {
+                fetchSeasonData(document.getElementById('season-selector').value);
+            }, 1000);
         })
         .catch(err => {
             console.error(err);
