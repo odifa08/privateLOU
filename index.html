@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>P of LOU</title>
+    
+    <!-- Web App 바로가기 아이콘 및 Manifest (Data URI 기반) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <link rel="manifest" href='data:application/manifest+json,{"name":"P of LOU","short_name":"P of LOU","start_url":".","display":"standalone","background_color":"#0b0f19","theme_color":"#0b0f19","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>","sizes":"512x512","type":"image/svg+xml"}]}'>
+    <meta name="theme-color" content="#0b0f19">
+
     <!-- 프리텐다드 웹 폰트 CDN -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <script src="https://unpkg.com/highcharts@11.4.0/highcharts.js"></script>
@@ -105,6 +112,29 @@
         .row { display: flex; gap: 8px; margin-bottom: 8px; }
         .col { flex: 1; }
         
+        /* 마이너스 토글 버튼 전용 입력 그룹 */
+        .input-with-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-minus {
+            background: #334155;
+            color: #f87171;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            user-select: none;
+        }
+        .btn-minus:active {
+            background: #f87171;
+            color: #0b0f19;
+        }
+
         input, select {
             width: 100%;
             padding: 8px 10px;
@@ -128,7 +158,6 @@
     <!-- 🔒 비밀번호 잠금 자바스크립트 -->
     <script>
         (function() {
-            // 원하는 비밀번호로 변경하세요
             const MY_PASSWORD = "qwer"; 
 
             if (sessionStorage.getItem("authenticated") !== "true") {
@@ -186,19 +215,16 @@
     <div class="modal-content">
         <div class="modal-header">🚀 매매 시트 저장 (A~Q열)</div>
         <form id="tradeForm">
-            <!-- Q열에 들어갈 시즌 선택 드롭다운 -->
             <div class="form-group">
                 <label for="modalSeasonSelect">시즌 지정 (Q열 저장 항목)</label>
                 <select id="modalSeasonSelect" style="color:#38bdf8; font-weight:bold;"></select>
             </div>
 
-            <!-- A열 -->
             <div class="form-group">
                 <label for="date">거래 날짜 (A열)</label>
                 <input type="date" id="date" required>
             </div>
 
-            <!-- B~G열 -->
             <div class="section-title">매수 내역 (B~G열)</div>
             <div class="row">
                 <div class="col"><input type="number" step="any" id="buyPrice1" placeholder="1차 매수가 (B)"></div>
@@ -213,7 +239,6 @@
                 <div class="col"><input type="number" step="any" id="buyQty3" placeholder="3차 수량 (G)"></div>
             </div>
 
-            <!-- H~M열 -->
             <div class="section-title">매도 내역 (H~M열)</div>
             <div class="row">
                 <div class="col"><input type="number" step="any" id="sellPrice1" placeholder="1차 매도가 (H)"></div>
@@ -228,7 +253,6 @@
                 <div class="col"><input type="number" step="any" id="sellQty3" placeholder="3차 수량 (M)"></div>
             </div>
 
-            <!-- N~P열 -->
             <div class="section-title">결과 요약 (N, O, P열)</div>
             <div class="row">
                 <div class="col">
@@ -241,7 +265,11 @@
                 </div>
                 <div class="col">
                     <label for="profit">수익실현 (P열)</label>
-                    <input type="number" step="any" id="profit" placeholder="수익실현">
+                    <!-- 수익실현 칸에만 [-] 마이너스 토글 버튼 유지 -->
+                    <div class="input-with-btn">
+                        <input type="number" step="any" id="profit" placeholder="수익실현">
+                        <button type="button" class="btn-minus" onclick="toggleMinus('profit')">-</button>
+                    </div>
                 </div>
             </div>
 
@@ -254,6 +282,18 @@
 </div>
 
 <script>
+// 모바일 입력 키패드 부호 전환용 마이너스 토글 함수
+function toggleMinus(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    let val = input.value.trim();
+    if (val.startsWith('-')) {
+        input.value = val.substring(1);
+    } else {
+        input.value = '-' + val;
+    }
+}
+
 const gasAppUrl = "https://script.google.com/macros/s/AKfycbz-IxTrZ9q_1MUB8i3u_eQtP66lqyZ8tfxcE90LNspU1X_JllbJI21gfDpGtoVcIzXvaA/exec";
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -264,10 +304,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeBtn = document.getElementById('closeModalBtn');
     const tradeForm = document.getElementById('tradeForm');
 
-    // 오늘 날짜 기본 세팅
     document.getElementById('date').value = new Date().toISOString().substring(0, 10);
 
-    // 모달 열기 시 시즌 선택 드롭다운 연동
     openBtn.onclick = () => {
         const mainSelector = document.getElementById('season-selector');
         const modalSelector = document.getElementById('modalSeasonSelect');
@@ -292,30 +330,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     closeBtn.onclick = () => modal.style.display = 'none';
 
-    // 폼 저장 시 '매매' 시트로 전송 (시즌 항목은 Q열 저장용)
     tradeForm.onsubmit = function(e) {
         e.preventDefault();
         
         const selectedSeason = document.getElementById('modalSeasonSelect').value;
         
         const payload = {
-            sheetName: selectedSeason, // Q열: 시즌
-            date: document.getElementById('date').value,       // A열
-            buyPrice1: document.getElementById('buyPrice1').value, // B열
-            buyQty1: document.getElementById('buyQty1').value,     // C열
-            buyPrice2: document.getElementById('buyPrice2').value, // D열
-            buyQty2: document.getElementById('buyQty2').value,     // E열
-            buyPrice3: document.getElementById('buyPrice3').value, // F열
-            buyQty3: document.getElementById('buyQty3').value,     // G열
-            sellPrice1: document.getElementById('sellPrice1').value, // H열
-            sellQty1: document.getElementById('sellQty1').value,     // I열
-            sellPrice2: document.getElementById('sellPrice2').value, // J열
-            sellQty2: document.getElementById('sellQty2').value,     // K열
-            sellPrice3: document.getElementById('sellPrice3').value, // L열
-            sellQty3: document.getElementById('sellQty3').value,     // M열
-            avgPrice: document.getElementById('avgPrice').value,     // N열
-            totalQty: document.getElementById('totalQty').value,     // O열
-            profit: document.getElementById('profit').value        // P열
+            sheetName: selectedSeason,
+            date: document.getElementById('date').value,
+            buyPrice1: document.getElementById('buyPrice1').value,
+            buyQty1: document.getElementById('buyQty1').value,
+            buyPrice2: document.getElementById('buyPrice2').value,
+            buyQty2: document.getElementById('buyQty2').value,
+            buyPrice3: document.getElementById('buyPrice3').value,
+            buyQty3: document.getElementById('buyQty3').value,
+            sellPrice1: document.getElementById('sellPrice1').value,
+            sellQty1: document.getElementById('sellQty1').value,
+            sellPrice2: document.getElementById('sellPrice2').value,
+            sellQty2: document.getElementById('sellQty2').value,
+            sellPrice3: document.getElementById('sellPrice3').value,
+            sellQty3: document.getElementById('sellQty3').value,
+            avgPrice: document.getElementById('avgPrice').value,
+            totalQty: document.getElementById('totalQty').value,
+            profit: document.getElementById('profit').value
         };
 
         loadingEl.style.display = 'flex';
@@ -333,7 +370,6 @@ document.addEventListener("DOMContentLoaded", function () {
             tradeForm.reset();
             document.getElementById('date').value = new Date().toISOString().substring(0, 10);
             
-            // 현재 대시보드 새로고침
             fetchSeasonData(document.getElementById('season-selector').value);
         })
         .catch(err => {
@@ -365,8 +401,9 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .then(res => {
                 if (res.availableSeasons) updateDropdown(res.availableSeasons, res.currentSheet);
-                const titleText = res.currentSheet === 'ALL' ? 'All' : res.currentSheet;
-                document.getElementById('dashboard-title').innerText = `📊 P of LOU (${titleText})`;
+                
+                document.getElementById('dashboard-title').innerText = `📊 P of LOU`;
+                
                 renderDashboard(res.rows, res.currentSheet);
                 loadingEl.style.display = 'none';
             })
@@ -387,7 +424,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const cycleDaysMap = {}, cycleProfitMap = {};
         
         let initialCapital = null;
-        let lastCycleNo = null, lastCycleEndReturn = 0, currentCycleLastPoint = null;
 
         for (let i = 1; i < rows.length; i++) {
             const row = rows[i];
@@ -425,14 +461,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 cycleDaysMap[cycleNo] = (cycleDaysMap[cycleNo] || 0) + 1;
                 cycleProfitMap[cycleNo] = (row[12] !== undefined && row[12] !== "") ? totalCycleProfit : ((cycleProfitMap[cycleNo] || 0) + dailyProfit);
 
-                if (lastCycleNo !== null && cycleNo !== lastCycleNo && currentCycleLastPoint) {
-                    const diff = currentCycleLastPoint.y - lastCycleEndReturn;
-                    const marker = { x: currentCycleLastPoint.x, y: currentCycleLastPoint.y, dateStr: dateStr, name: lastCycleNo + '차 마감', color: diff < 0 ? '#f87171' : '#62d3a4', marker: { symbol: 'diamond', radius: 6 } };
-                    (diff < 0 ? lossMarkers : winMarkers).push(marker);
-                    lastCycleEndReturn = currentCycleLastPoint.y;
+                if (evalVal === 0) {
+                    const cProfit = cycleProfitMap[cycleNo];
+                    const marker = { 
+                        x: timestamp, 
+                        y: cumReturnPct, 
+                        dateStr: dateStr, 
+                        name: cycleNo + '차 마감', 
+                        color: cProfit < 0 ? '#f87171' : '#62d3a4', 
+                        marker: { symbol: 'diamond', radius: 6 } 
+                    };
+                    
+                    if (cProfit < 0) {
+                        lossMarkers.push(marker);
+                    } else if (cProfit > 0) {
+                        winMarkers.push(marker);
+                    }
                 }
-                lastCycleNo = cycleNo;
-                currentCycleLastPoint = { x: timestamp, y: cumReturnPct, dateStr: dateStr };
             }
         }
 
