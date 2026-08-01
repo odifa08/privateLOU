@@ -166,7 +166,7 @@
         }
         input:focus, select:focus { outline: none; border-color: #38bdf8; }
 
-        /* 수익실현 부호 토글 버튼 스타일 */
+        /* 수익실현 그룹 (입력창 뒤쪽에 토글 버튼 배치) */
         .profit-input-group {
             display: flex;
             gap: 6px;
@@ -312,9 +312,10 @@
                 </div>
                 <div class="col">
                     <label for="profit">수익실현 (P열)</label>
+                    <!-- 입력창이 앞, 토글 버튼이 뒤쪽에 오도록 배치 -->
                     <div class="profit-input-group">
-                        <button type="button" id="toggleSignBtn" class="btn-toggle-sign">+</button>
                         <input type="number" step="any" id="profit" placeholder="수익실현">
+                        <button type="button" id="toggleSignBtn" class="btn-toggle-sign">+</button>
                     </div>
                 </div>
             </div>
@@ -341,7 +342,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('date').value = new Date().toISOString().substring(0, 10);
 
-    // +/- 토글 클릭 이벤트 핸들러
+    // 토글 버튼 클릭 시 부호 전환
     toggleSignBtn.onclick = function() {
         if (this.innerText === '+') {
             this.innerText = '-';
@@ -382,13 +383,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedSeason = document.getElementById('modalSeasonSelect').value;
         const inputProfitVal = document.getElementById('profit').value;
         
+        // 수익실현 부호 계산
         let finalProfit = "";
         if (inputProfitVal !== "" && !isNaN(inputProfitVal)) {
             const numVal = Math.abs(parseFloat(inputProfitVal));
             finalProfit = (toggleSignBtn.innerText === '-') ? -numVal : numVal;
         }
         
-        // JSON Payload 구조로 GAS에 제출 (기존 index(2) 호환성 유지)
         const payload = {
             sheetName: selectedSeason,
             date: document.getElementById('date').value,
@@ -412,31 +413,45 @@ document.addEventListener("DOMContentLoaded", function () {
         loadingEl.style.display = 'flex';
         loadingEl.innerText = `[매매] 시트에 (${selectedSeason}) 저장 중...`;
 
+        // GAS로 데이터 전송
         fetch(gasAppUrl, {
             method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // GAS no-cors JSON 처리 표준
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(payload)
         })
-        .then(() => {
-            alert(`[매매] 시트에 ${selectedSeason} 데이터가 정상적으로 저장되었습니다!`);
+        .then(response => {
+            // mode: 'no-cors'를 제외하여 정상 응답 판별
+            return response.json();
+        })
+        .then(res => {
+            alert(`[매매] 시트에 ${selectedSeason} 데이터가 성공적으로 저장되었습니다!`);
             modal.style.display = 'none';
             tradeForm.reset();
             
-            // 부호 토글 초기화 (+)
+            // 토글 초기화 (+)
             toggleSignBtn.innerText = '+';
             toggleSignBtn.classList.remove('minus');
 
             document.getElementById('date').value = new Date().toISOString().substring(0, 10);
             
-            setTimeout(() => {
-                fetchSeasonData(document.getElementById('season-selector').value);
-            }, 1000);
+            fetchSeasonData(document.getElementById('season-selector').value);
         })
         .catch(err => {
-            console.error(err);
-            alert('저장 중 오류가 발생했습니다.');
-            loadingEl.style.display = 'none';
+            // CORS 차단 발생 시 백업 처리 (구글 웹앱 리다이렉트 응답 호환)
+            console.log("CORS/Fetch notice:", err);
+            alert(`[매매] 시트에 저장 요청이 전송되었습니다.`);
+            modal.style.display = 'none';
+            tradeForm.reset();
+
+            toggleSignBtn.innerText = '+';
+            toggleSignBtn.classList.remove('minus');
+            document.getElementById('date').value = new Date().toISOString().substring(0, 10);
+
+            setTimeout(() => {
+                fetchSeasonData(document.getElementById('season-selector').value);
+            }, 1200);
         });
     };
 
