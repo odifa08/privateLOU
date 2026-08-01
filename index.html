@@ -266,10 +266,14 @@
                 <div class="col">
                     <label for="profit">수익실현 (P열)</label>
                     <!-- 수익실현 칸에만 [-] 마이너스 토글 버튼 유지 -->
-                    <div class="input-with-btn">
+                    <div class="col">
+                        <label for="profit">수익실현 (P열)</label>
+                        <div class="input-with-btn">
                         <input type="number" step="any" id="profit" placeholder="수익실현">
-                        <button type="button" class="btn-minus" onclick="toggleMinus('profit')">-</button>
+                        <!-- 텍스트를 - 에서 +/- 로 수정 -->
+                        <button type="button" class="btn-minus" onclick="toggleMinus('profit')">+/-</button>
                     </div>
+                </div>
                 </div>
             </div>
 
