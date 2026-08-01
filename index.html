@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -298,7 +298,7 @@ function toggleMinus(inputId) {
     }
 }
 
-const gasAppUrl = "https://script.google.com/macros/s/AKfycbz-IxTrZ9q_1MUB8i3u_eQtP66lqyZ8tfxcE90LNspU1X_JllbJI21gfDpGtoVcIzXvaA/exec";
+const gasAppUrl = "https://script.google.com/macros/s/AKfycbw0YAWywc-4ioF0gnu71AbhJlNJLhahAG6ey0JR6Pn-r4qx7uY4L7p4V1_AC9lm-xdygg/exec";
 
 document.addEventListener("DOMContentLoaded", function () {
     const selector = document.getElementById('season-selector');
@@ -362,23 +362,31 @@ document.addEventListener("DOMContentLoaded", function () {
         loadingEl.style.display = 'flex';
         loadingEl.innerText = `[매매] 시트에 (${selectedSeason}) 저장 중...`;
 
+        // 기존 fetch 부분을 아래와 같이 수정
         fetch(gasAppUrl, {
             method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+            // mode: 'no-cors' 옵션을 완전히 제거합니다.
+            headers: { 
+                'Content-Type': 'text/plain;charset=utf-8' // Apps Script에서 e.postData 파싱을 위해 text/plain 권장
+            },
             body: JSON.stringify(payload)
         })
-        .then(() => {
-            alert(`[매매] 시트에 ${selectedSeason} 데이터가 정상적으로 저장되었습니다!`);
-            modal.style.display = 'none';
-            tradeForm.reset();
-            document.getElementById('date').value = new Date().toISOString().substring(0, 10);
-            
-            fetchSeasonData(document.getElementById('season-selector').value);
+        .then(res => res.json())
+        .then(data => {
+            loadingEl.style.display = 'none';
+            if (data.status === 'success') {
+                alert(`[매매] 시트에 ${selectedSeason} 데이터가 정상적으로 저장되었습니다!`);
+                modal.style.display = 'none';
+                tradeForm.reset();
+                document.getElementById('date').value = new Date().toISOString().substring(0, 10);
+                fetchSeasonData(document.getElementById('season-selector').value);
+            } else {
+                alert('저장 실패: ' + data.message);
+            }
         })
         .catch(err => {
             console.error(err);
-            alert('저장 중 오류가 발생했습니다.');
+            alert('저장 중 통신 오류가 발생했습니다. 브라우저 콘솔(F12)을 확인하세요.');
             loadingEl.style.display = 'none';
         });
     };
